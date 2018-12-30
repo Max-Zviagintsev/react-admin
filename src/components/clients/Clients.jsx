@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {Table, Icon, Divider} from 'antd';
+import {Table, Icon} from 'antd';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
-const {Column, ColumnGroup} = Table;
 
 //CSS Starts
 const TitleWrapper = styled.div`
