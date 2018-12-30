@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import {Table, Icon} from 'antd';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
+import {firestoreConnect} from 'react-redux-firebase';
+import PropTypes from 'prop-types';
 
 //CSS Starts
 const TitleWrapper = styled.div`
@@ -14,7 +18,9 @@ const TitleWrapper = styled.div`
 class Clients extends Component {
 
     render() {
-        const clients = [{
+        const clients = this.props.clients;
+
+/*            [{
             id: '354534343',
             firstName: 'Kevin',
             lastName: 'Johnson',
@@ -29,7 +35,7 @@ class Clients extends Component {
                 email: 'bob@gmail.com',
                 phone: '555-555-3444',
                 balance: '1000'
-            }];
+            }];*/
 
         const columns = [{
             title: 'First Name',
@@ -59,7 +65,7 @@ class Clients extends Component {
                         <h1>Clients</h1>
                     </TitleWrapper>
 
-                    <Table dataSource={clients} columns={columns} />
+                    <Table dataSource={clients} columns={columns}/>
                 </div>
             );
         } else {
@@ -68,4 +74,13 @@ class Clients extends Component {
     }
 }
 
-export default Clients;
+        Clients.propTypes = {
+            firestore: PropTypes.object.isRequired,
+            clients: PropTypes.array
+        };
+
+export default compose(
+    firestoreConnect([{collection: 'clients'}]),
+    connect((state, props) => ({
+        clients: state.firestore.ordered.clients
+    })))(Clients);
