@@ -11,6 +11,7 @@ import Navbar from "./components/layout/Navbar";
 import Dashboard from "./components/layout/Dashboard";
 
 import './App.css';
+import AddClient from "./components/clients/AddClient";
 
 // object containing Firebase config
 const fbConfig = {
@@ -54,9 +55,10 @@ class App extends Component {
                             <Navbar/>
                             <Switch>
                                 <Route exact path="/" component={Dashboard}/>
+                                <Route exact path="/client/add" component={AddClient}/>
                             </Switch>
                         </div>
-                    </Router>
+                    </Router>AddClient
                 </ReactReduxFirebaseProvider>
             </Provider>
         );

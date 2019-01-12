@@ -1,12 +1,23 @@
 import React, {Component} from 'react';
 import { Menu, Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+
+//CSS Starts
+const MenuWrapper = styled.div`
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  width: 256px;
+  z-index: 99999999;
+`;
+//CSS Ends
 
 const SubMenu = Menu.SubMenu;
 
 class Navbar extends Component {
     state = {
-        collapsed: false,
+        collapsed: true,
     };
 
     toggleCollapsed = () => {
@@ -17,7 +28,7 @@ class Navbar extends Component {
 
     render() {
         return (
-            <div style={{ width: 256 }}>
+            <MenuWrapper>
                 <Button type="primary" onClick={this.toggleCollapsed} style={{ marginBottom: 16 }}>
                     <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
                 </Button>
@@ -42,12 +53,6 @@ class Navbar extends Component {
                         <Icon type="inbox" />
                         <span>Option 3</span>
                     </Menu.Item>
-                    <SubMenu key="sub1" title={<span><Icon type="mail" /><span>Navigation One</span></span>}>
-                        <Menu.Item key="5">Option 5</Menu.Item>
-                        <Menu.Item key="6">Option 6</Menu.Item>
-                        <Menu.Item key="7">Option 7</Menu.Item>
-                        <Menu.Item key="8">Option 8</Menu.Item>
-                    </SubMenu>
                     <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
                         <Menu.Item key="9">Option 9</Menu.Item>
                         <Menu.Item key="10">Option 10</Menu.Item>
@@ -57,7 +62,7 @@ class Navbar extends Component {
                         </SubMenu>
                     </SubMenu>
                 </Menu>
-            </div>
+            </MenuWrapper>
         );
     }
 }

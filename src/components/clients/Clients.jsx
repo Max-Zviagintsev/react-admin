@@ -1,41 +1,54 @@
 import React, {Component} from 'react';
-import {Table, Icon} from 'antd';
+import {Table, Icon, Button} from 'antd';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 import {firestoreConnect} from 'react-redux-firebase';
 import PropTypes from 'prop-types';
+import Loader from 'react-loader-spinner';
 
 //CSS Starts
 const TitleWrapper = styled.div`
   display: flex;
   align-items: baseline;
 `;
-
+const HeaderWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const TotalOwed = styled.div`
+  font-weight: bold;
+`;
+const AddNewButton = styled(Button)`
+  margin-left: 20px;
+`;
 //CSS Ends
 
 class Clients extends Component {
 
-    render() {
-        const clients = this.props.clients;
+    state = {
+        totalOwed: null
+    };
 
-/*            [{
-            id: '354534343',
-            firstName: 'Kevin',
-            lastName: 'Johnson',
-            email: 'kevin@gmail.com',
-            phone: '555-555-5555',
-            balance: '30'
-        },
-            {
-                id: '144578666',
-                firstName: 'Bob',
-                lastName: 'Jackson',
-                email: 'bob@gmail.com',
-                phone: '555-555-3444',
-                balance: '1000'
-            }];*/
+    static getDerivedStateFromProps(props, state) {
+
+        const {clients} = props;
+
+        if (clients) {
+            // Add balances
+            const total = clients.reduce((total, client) => {
+                return total + parseFloat(client.balance.toString());
+            }, 0);
+
+            return {totalOwed: total}
+        }
+        return null;
+    }
+
+    render() {
+        const { clients } = this.props;
+        const { totalOwed } = this.state;
 
         const columns = [{
             title: 'First Name',
@@ -50,34 +63,50 @@ class Clients extends Component {
             dataIndex: 'email',
             key: 'email',
         }, {
-            title: 'Balance',
+            title: 'Balance, $',
             dataIndex: 'balance',
-            key: 'balance',
-            render: (clients) => <Link to={'/client/' + clients.id}>Details</Link>
-        }];
+            key: 'balance'
+        },
+            {
+                title: 'More',
+                key: 'details',
+                render: (clients) => <Link to={'/client/' + clients.id}>Details</Link>
+            }
+        ];
 
         if (clients) {
             return (
                 <div>
+                    <HeaderWrapper>
                     <TitleWrapper>
                         <Icon type="team" style={{fontSize: '22px', color: '#08c'}}/>
                         &nbsp;
                         <h1>Clients</h1>
+                        <AddNewButton icon="plus" href="/client/add">Add New</AddNewButton>
                     </TitleWrapper>
+                        <TotalOwed>
+                            Total Owed{' '}${parseFloat(totalOwed).toFixed(2)}
+                        </TotalOwed>
+                    </HeaderWrapper>
 
                     <Table dataSource={clients} columns={columns}/>
                 </div>
             );
         } else {
-            return <h1>Loading...</h1>
+            return <Loader
+                type="Rings"
+                color="#00BFFF"
+                height="100"
+                width="100"
+            />
         }
     }
 }
 
-        Clients.propTypes = {
-            firestore: PropTypes.object.isRequired,
-            clients: PropTypes.array
-        };
+Clients.propTypes = {
+    firestore: PropTypes.object.isRequired,
+    clients: PropTypes.array
+};
 
 export default compose(
     firestoreConnect([{collection: 'clients'}]),

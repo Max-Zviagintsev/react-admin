@@ -1,13 +1,18 @@
 import React from 'react';
 import Clients from "../clients/Clients";
-import Sidebar from "./Sidebar";
+import styled from 'styled-components';
+
+//CSS Starts
+const DashboardWrapper = styled.div`
+  margin: 55px 15px 15px 110px;
+`;
+//CSS Ends
 
 const Dashboard = () => {
     return (
-        <div>
+        <DashboardWrapper>
             <Clients />
-            <Sidebar />
-        </div>
+        </DashboardWrapper>
     );
 };
 
